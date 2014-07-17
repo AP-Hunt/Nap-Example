@@ -8,9 +8,18 @@ use Nap\Response\Result\Data;
 use Nap\Response\Result\HTTP\BadRequest;
 use Nap\Response\Result\HTTP\NotFound;
 use Nap\Response\Result\HTTP\OK;
+use NapExample\Data\TodoListsRepository;
 
 class EntriesController implements NapControllerInterface
 {
+    /** @var \NapExample\Data\TodoListsRepository */
+    private $todoListsRepository;
+
+    public function __construct()
+    {
+        $this->todoListsRepository = new TodoListsRepository(DATA_PATH);
+    }
+
     /**
      * @Nap\Accept({"application/json"})
      * @Nap\DefaultMime("application/json")
@@ -52,60 +61,22 @@ class EntriesController implements NapControllerInterface
         if(!isset($body["complete"]))
         {
             header("HTTP 400 Bad Request");
-            return new ActionResult(new BadRequest(), new Data(array()));
+            return new ActionResult(new BadRequest(), new Data(null));
         }
 
         $isComplete = (strtolower($body["complete"]) == "true");
+        $list = $this->todoListsRepository->getTodoList($todoId);
+        $item = $list->getItem($entryId);
 
-        $strData = file_get_contents(DATA_PATH);
-        $json = json_decode($strData, true);
-
-        $list = $this->findTodoListIndex($todoId, $json["todo-lists"]);
-        if($list === null)
-        {
-            return new ActionResult(new NotFound(), new Data(array()));
-        }
-        $entry = $this->findEntryIndexInList($entryId, $json["todo-lists"][$list]);
-        if($entry === null)
-        {
-            return new ActionResult(new NotFound(), new Data(array()));
+        if($item === null) {
+            return new ActionResult(new NotFound(), new Data(null));
         }
 
-        $json["todo-lists"][$list]["items"][$entry]["complete"] = $isComplete;
-        $this->writeBackToFile(DATA_PATH, $json);
+        $item->setIsDone($isComplete);
+        $this->todoListsRepository->save($list);
 
-        return new ActionResult(new OK(), new Data($json["todo-lists"][$list]["items"][$entry]));
+        return new ActionResult(new OK(), new Data($item));
 
-    }
-
-    private function findTodoListIndex($todoId, $lists)
-    {
-        foreach($lists as $i => $lst)
-        {
-            if($lst["id"] == $todoId){
-                return $i;
-            }
-        }
-        return null;
-    }
-
-    private function findEntryIndexInList($entryId, $list)
-    {
-        foreach($list["items"] as $i => $entry)
-        {
-            if($entry["id"] == $entryId){
-                return $i;
-            }
-        }
-
-        return null;
-    }
-
-    private function writeBackToFile($dataPath, array $json)
-    {
-        $h = fopen($dataPath, "w+");
-        fwrite($h, json_encode($json));
-        fclose($h);
     }
 
     /**
