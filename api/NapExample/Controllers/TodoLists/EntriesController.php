@@ -24,7 +24,7 @@ class EntriesController implements NapControllerInterface
      * @Nap\Accept({"application/json"})
      * @Nap\DefaultMime("application/json")
      */
-    public function index(\Symfony\Component\HttpFoundation\Request $request)
+    public function index(\Symfony\Component\HttpFoundation\Request $request, array $params)
     {
         // TODO: Implement index() method.
     }

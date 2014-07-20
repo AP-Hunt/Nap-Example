@@ -23,7 +23,7 @@ class TodoListsController implements \Nap\Controller\NapControllerInterface
      * @Nap\Accept({"application/json"})
      * @Nap\DefaultMime("application/json")
      */
-    public function index(\Symfony\Component\HttpFoundation\Request $request)
+    public function index(\Symfony\Component\HttpFoundation\Request $request, array $params)
     {
         $lists = $this->todoListsRepository->getAll();
 

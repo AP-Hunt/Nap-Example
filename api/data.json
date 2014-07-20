@@ -2,24 +2,55 @@
     "todo-lists": [
         {
             "id": 1,
-            "name": "My list",
+            "name": "Car",
             "items": [
                 {
                     "id": 1,
-                    "title": "I need to do something",
-                    "complete": false
+                    "title": "Change oil",
+                    "complete": true
                 },
                 {
                     "id": 2,
-                    "title": "And I already did the other thing",
-                    "complete": true
+                    "title": "Get MOT",
+                    "complete": false
+                },
+                {
+                    "id": 3,
+                    "title": "Renew tax",
+                    "complete": false
+                },
+                {
+                    "id": 4,
+                    "title": "Wash",
+                    "complete": false
                 }
             ]
         },
         {
             "id": 2,
-            "name": "My other list",
-            "items": []
+            "name": "Contribute",
+            "items": [
+                {
+                    "id": 1,
+                    "title": "Clone",
+                    "complete": true
+                },
+                {
+                    "id": 2,
+                    "title": "Test",
+                    "complete": false
+                },
+                {
+                    "id": 3,
+                    "title": "Change",
+                    "complete": false
+                },
+                {
+                    "id": 4,
+                    "title": "Send pull request",
+                    "complete": false
+                }
+            ]
         }
     ]
 }
